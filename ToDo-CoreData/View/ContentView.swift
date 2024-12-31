@@ -36,7 +36,14 @@ struct ContentView: View {
     
     @FetchRequest(entity: Task.entity(), sortDescriptors: [NSSortDescriptor(key: "dateCreated", ascending: false)]) private var allTasks: FetchedResults<Task>
     
+    @State private var showAlert: Bool = false
+    
     private func saveTask() {
+        
+        if title.isEmpty {
+            showAlert = true
+            return
+        }
         
         do {
             let task = Task(context: viewContext)
@@ -122,6 +129,9 @@ struct ContentView: View {
                         .background(Color.blue)
                         .foregroundColor(.white)
                         .clipShape(RoundedRectangle(cornerRadius: 10.0, style: .continuous))
+                }
+                .alert(isPresented: $showAlert) {
+                    Alert(title: Text("Error"), message: Text("Please enter a task to save"), dismissButton: .default(Text("OK")))
                 }
                 
                 
